@@ -9,13 +9,12 @@
 <body>
     <div class="main">
         <h1 class="headerLogin">LOGIN</h1>
-        <form class="loginForm" action="#">
-            <input id="userName" class="input1" type="text" placeholder="User name"><br>
-            <input class="input1" type="password" name="" id="" placeholder="Password"><br>
-            <input type="checkbox" name="" id="remember"><span>  Remember?</span><a style="float: right;" href="/">Back to home</a><br>
-            <button type="submit" onclick="checkR()">login</button>
+        <form class="loginForm" action="#" [formGroup]="formData" (ngSubmit)="onClickSubmit(formData.value)">
+            <input class="input1" type="text" placeholder="User name" formControlName="userName" autofocus><br>
+            <input class="input1" type="password" placeholder="Password" formControlName="password"><br>
+            <input type="checkbox" (change)="checkAll($event)" name=""><span>  Remember?</span><a style="float: right;" href="/">Back to home</a><br>
+            <button type="submit">login</button>
         </form>
     </div>
-    <script src="/assets/js/login-script.js"></script>
 </body>
 </html>
