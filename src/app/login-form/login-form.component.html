@@ -10,10 +10,15 @@
     <div class="main">
         <h1 class="headerLogin">LOGIN</h1>
         <form class="loginForm" action="#" [formGroup]="formData" (ngSubmit)="onClickSubmit(formData.value)">
-            <input class="input1" type="text" placeholder="User name" formControlName="userName" autofocus><br>
-            <input class="input1" type="password" placeholder="Password" formControlName="password"><br>
-            <input type="checkbox" (change)="checkAll($event)" name=""><span>  Remember?</span><a style="float: right;" href="/">Back to home</a><br>
-            <button type="submit">login</button>
+            <label for="un">User name</label>          
+            <i class="bi bi-person-fill icon1"></i><input id="un" class="input1" type="text" placeholder="User name" formControlName="userName"><br>
+            <label for="pw">Password</label>
+            <i class="bi bi-lock-fill icon2"></i><input id="pw" class="input1" [type]="showPass ? 'password' : 'text'" placeholder="Password" formControlName="password"><i *ngIf="showPass; else hideIcon" class="bi bi-eye-fill icon3" (click)="toggleShowPass()">
+
+            </i><ng-template #hideIcon><i (click)="toggleShowPass()" class="bi bi-eye-slash-fill icon3"></i></ng-template><br>
+            
+            <!-- <input type="checkbox" (change)="checkAll($event)" name=""><span>  Remember?</span><a style="float: right;" href="/">Back to home</a><br> -->
+            <button type="submit">LOGIN</button>
         </form>
     </div>
 </body>

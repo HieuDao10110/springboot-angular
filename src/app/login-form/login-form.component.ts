@@ -10,6 +10,7 @@ import { AuthService } from '../auth.service';
 })
 export class LoginFormComponent implements OnInit {
 
+  showPass: boolean = true;
 
   userField:string = '';
   checked:boolean = false;
@@ -62,5 +63,9 @@ export class LoginFormComponent implements OnInit {
       console.log("Is Login Success: " + data); 
       if(data) this.router.navigate(['/']); 
     });
+
  }
+  toggleShowPass(){
+      this.showPass = !this.showPass;
+  }
 }
