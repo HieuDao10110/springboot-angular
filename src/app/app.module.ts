@@ -9,6 +9,7 @@ import { MainHomeComponent } from './main-home/main-home.component';
 import { MainServicesComponent } from './main-services/main-services.component';
 import { MainAboutComponent } from './main-about/main-about.component';
 import { RouterModule } from '@angular/router';
+import { LoginFormComponent } from './login-form/login-form.component';
 
 @NgModule({
   declarations: [
@@ -18,14 +19,16 @@ import { RouterModule } from '@angular/router';
     MainComponent,
     MainHomeComponent,
     MainServicesComponent,
-    MainAboutComponent
+    MainAboutComponent,
+    LoginFormComponent
   ],
   imports: [
     BrowserModule,
     RouterModule.forRoot([
-      { path: '', component: MainHomeComponent },
+      { path: '', component: MainComponent },
       { path: 'services', component: MainServicesComponent },
       { path: 'about', component: MainAboutComponent },
+      { path: 'login', component: LoginFormComponent },
     ])
   ],
   providers: [],
