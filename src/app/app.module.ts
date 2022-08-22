@@ -14,6 +14,7 @@ import { LoginFormComponent } from './login-form/login-form.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ExpensGuard } from './expens.guard';
 import { LogoutComponent } from './logout/logout.component';
+import { AdminComponent } from './admin/admin.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { LogoutComponent } from './logout/logout.component';
     MainServicesComponent,
     MainAboutComponent,
     LoginFormComponent,
-    LogoutComponent
+    LogoutComponent,
+    AdminComponent
   ],
   imports: [
     FormsModule,
@@ -37,7 +39,7 @@ import { LogoutComponent } from './logout/logout.component';
       { path: 'about', component: MainAboutComponent },
       { path: 'login', component: LoginFormComponent },
       { path: 'logout', component: LogoutComponent },
-      // { path: 'expenses', component: ExpenseEntryListComponent, canActivate: [ExpensGuard]},
+      { path: 'admin', component: AdminComponent, canActivate: [ExpensGuard]},
       // { path: 'expenses/detail/:id', component: ExpenseEntryComponent, canActivate: [ExpensGuard]},
       // { path: '', redirectTo: 'expenses', pathMatch: 'full' }
     ])

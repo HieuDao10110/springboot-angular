@@ -61,7 +61,13 @@ export class LoginFormComponent implements OnInit {
 
     this.authService.login(this.userName, this.password).subscribe( (data: string) => { 
       console.log("Is Login Success: " + data); 
-      if(data) this.router.navigate(['/']); 
+      if(data) {
+        if(this.userName == "admin" && this.password == "admin"){
+          this.router.navigate(['/admin']); 
+        }else{
+          this.router.navigate(['/']);
+        }
+      }
     });
 
  }
