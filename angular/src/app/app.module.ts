@@ -16,6 +16,7 @@ import { ExpensGuard } from './expens.guard';
 import { LogoutComponent } from './logout/logout.component';
 import { AdminComponent } from './admin/admin.component';
 
+import { HttpClientModule } from '@angular/common/http';
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,6 +34,7 @@ import { AdminComponent } from './admin/admin.component';
     FormsModule,
     ReactiveFormsModule,
     BrowserModule,
+    HttpClientModule,
     RouterModule.forRoot([
       { path: '', component: MainComponent },
       { path: 'services', component: MainServicesComponent },

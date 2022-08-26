@@ -11,7 +11,7 @@
         <h1 class="headerLogin">LOGIN</h1>
         <form class="loginForm" action="#" [formGroup]="formData" (ngSubmit)="onClickSubmit(formData.value)">
             <label for="un">User name</label>          
-            <i class="bi bi-person-fill icon1"></i><input id="un" class="input1" type="text" placeholder="User name" formControlName="userName"><br>
+            <i class="bi bi-person-fill icon1"></i><input id="un" class="input1" type="text" placeholder="User name" formControlName="username"><br>
             <label for="pw">Password</label>
             <i class="bi bi-lock-fill icon2"></i><input id="pw" class="input1" [type]="showPass ? 'password' : 'text'" placeholder="Password" formControlName="password"><i *ngIf="showPass; else hideIcon" class="bi bi-eye-fill icon3" (click)="toggleShowPass()">
 

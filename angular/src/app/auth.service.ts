@@ -8,7 +8,7 @@ import { tap, delay } from 'rxjs/operators';
 })
 export class AuthService {
 
-  isUserLoggedIn: boolean = false;
+   isUserLoggedIn: boolean = false;
 
    login(userName: string, password: string): Observable<any> {
       console.log(userName);
