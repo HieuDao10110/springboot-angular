@@ -43,6 +43,7 @@ import { HttpClientModule } from '@angular/common/http';
       { path: 'logout', component: LogoutComponent },
       { path: 'admin', component: AdminComponent, canActivate: [ExpensGuard]},
       // { path: 'expenses/detail/:id', component: ExpenseEntryComponent, canActivate: [ExpensGuard]},
+      // pathMatch:'full': In this case, when app is launched on localhost:4200 (or some server) the default page will be welcome screen, since the url will be https://localhost:4200/
       // { path: '', redirectTo: 'expenses', pathMatch: 'full' }
     ])
   ],

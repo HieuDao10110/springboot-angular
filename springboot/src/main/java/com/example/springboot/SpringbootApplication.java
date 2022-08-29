@@ -17,5 +17,4 @@ public class SpringbootApplication {
 	public String hello() {
 		return "Hello World";
 	}
-
 }

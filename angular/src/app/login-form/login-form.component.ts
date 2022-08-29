@@ -71,8 +71,10 @@ export class LoginFormComponent implements OnInit {
 
       if(response.status == "success") {
         localStorage.setItem('isUserLoggedIn',"true");
-        if(response.role == "1"){
+        if(response.role == "admin"){
           this.router.navigate(['/admin']); 
+        }else if(response.role == "user"){
+          this.router.navigate(['/']);
         }else{
           this.router.navigate(['/']);
         }
