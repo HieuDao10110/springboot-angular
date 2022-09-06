@@ -1,25 +1,36 @@
 package com.example.springboot.model;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.Collections;
 
 @Entity
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, updatable = false)
     private int id;
+    @Column
     private String username;
     @Column(nullable = false)
     private String password;
-    private String salt;
-    @Column(nullable = false)
-    private String role;
 
     public User() {
     }
 
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     public int getId() {
         return id;
+    }
+    public String getStringId() {
+        return String.valueOf(id);
     }
 
     public void setId(int id) {
@@ -42,19 +53,27 @@ public class User {
         this.password = password;
     }
 
-    public String getSalt() {
-        return salt;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.EMPTY_LIST;
+    }
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public void setSalt(String salt) {
-        this.salt = salt;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
     }
 
-    public String getRole() {
-        return role;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
