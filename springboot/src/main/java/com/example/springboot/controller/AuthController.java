@@ -9,6 +9,7 @@ import com.example.springboot.security.TokenGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -17,10 +18,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.BearerTokenAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
 import org.springframework.security.provisioning.UserDetailsManager;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 
@@ -57,12 +55,31 @@ public class AuthController {
         return ResponseEntity.ok(tokenGenerator.createToken(authentication));
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping(value = "/login")
     public ResponseEntity login(@RequestBody LoginDTO loginDTO){
 //        User user = new User(loginDTO.getUsername(), loginDTO.getPassword());
         Authentication authentication = daoAuthenticationProvider.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(loginDTO.getUsername(), loginDTO.getPassword()));
+        TokenDTO token = tokenGenerator.createToken(authentication);
+        String accessTokenKey = "access-token";
+        String accessTokenValue = token.getAccessToken();
 
-        return ResponseEntity.ok(tokenGenerator.createToken(authentication));
+        String refreshTokenKey = "refresh-token";
+        String refreshTokenValue = token.getRefreshToken();
+
+        String urlKey = "url-login";
+        String urlValue = "/api/users/login";
+
+        String exposeHeadersKey = "Access-Control-Expose-Headers";
+        String exposeHeadersValue = accessTokenKey + " ," + refreshTokenKey + " ," + urlKey;
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set(accessTokenKey, accessTokenValue);
+        responseHeaders.set(refreshTokenKey, refreshTokenValue);
+        responseHeaders.set(exposeHeadersKey, exposeHeadersValue);
+        responseHeaders.set(urlKey, urlValue);
+
+        return ResponseEntity.ok().headers(responseHeaders).body("");
     }
 
     @PostMapping("/token")

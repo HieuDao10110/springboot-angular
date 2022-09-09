@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { UserDetail } from '../classes/user-detail';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -9,17 +9,28 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 export class AdminService {
 
   // Base URL
-  private  baseUrl = "http://localhost:8080/user/login";
+  private readonly baseUrl = "http://localhost:8080/api";
+  private readonly rootUrl = "http://localhost:8080";
 
   constructor(private http: HttpClient) { }
 
-  login(userDetail: UserDetail): Observable<any>{
-    const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+  getPreLogin(userDetail: UserDetail): Observable<HttpResponse<any>> {
     const body = {
       username: userDetail.username,
       password: userDetail.password
     }
-    return this.http.post(this.baseUrl + "/api", userDetail).pipe(catchError(this.handleError));
+    return this.http.post<any>(`${this.baseUrl}`+"/auth/login", body, {observe: 'response'});
+  }
+
+  login(url: String, accessToken: String): Observable<any>{
+    const headers = { 
+      'Authorization': 'Bearer ' + accessToken
+    };
+    const body = {
+      "refreshToken": accessToken
+    };
+    return this.http.post(`${this.rootUrl}` + url, body, {observe: 'response', headers})
+    .pipe(catchError(this.handleError));
   }
 
   logout(){
@@ -27,6 +38,6 @@ export class AdminService {
   }
 
   handleError(error: HttpErrorResponse) {
-    return throwError(error);
+    return throwError(() => new Error(error.error));
 }
 }

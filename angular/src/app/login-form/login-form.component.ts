@@ -23,6 +23,7 @@ export class LoginFormComponent implements OnInit {
   username!: string;
   password!: string;
   formData!: FormGroup;
+  header: String[] = [];
 
   private userDetail: UserDetail = new UserDetail;
   constructor(private authService : AuthService, private router : Router,private adminService: AdminService) { }
@@ -65,23 +66,33 @@ export class LoginFormComponent implements OnInit {
     console.log("Login page: " + this.userDetail);
     console.log("Login page: " + typeof this.userDetail);
 
-    this.adminService.login(this.userDetail).subscribe( response => {  
-      console.log("respon data: " +response.role);
-      console.log("respon data type: " + typeof response);
+    this.adminService.getPreLogin(this.userDetail)
+    .subscribe( resp => {  
+      let at = resp.headers.get('access-token');
+        let rt = resp.headers.get('refresh-token');
+        let urlLogin = resp.headers.get('url-login');
+        this.header.push((at == null)?'':at);
+        this.header.push((rt == null)?'':rt);
 
-      if(response.status == "success") {
-        localStorage.setItem('isUserLoggedIn',"true");
-        if(response.role == "admin"){
-          this.router.navigate(['/admin']); 
-        }else if(response.role == "user"){
-          this.router.navigate(['/']);
+        if(resp.status == 200 && at != null && urlLogin != null){
+          this.showLogin(urlLogin, at);
         }else{
-          this.router.navigate(['/']);
+          console.log("pre Login fail");
         }
-      }
-      else{
-        localStorage.setItem('isUserLoggedIn',"false");
-      }
+
+      // if(resp.status == "success") {
+      //   localStorage.setItem('isUserLoggedIn',"true");
+      //   if(resp.role == "admin"){
+      //     this.router.navigate(['/admin']); 
+      //   }else if(resp.role == "user"){
+      //     this.router.navigate(['/']);
+      //   }else{
+      //     this.router.navigate(['/']);
+      //   }
+      // }
+      // else{
+      //   localStorage.setItem('isUserLoggedIn',"false");
+      // }
     },
     (error) => {
         console.log(error.error);
@@ -89,6 +100,18 @@ export class LoginFormComponent implements OnInit {
  }
   toggleShowPass(){
       this.showPass = !this.showPass;
+  }
+  showLogin(urlLogin:String, at:String){
+    this.adminService.login(urlLogin, at)
+    .subscribe(rs =>{
+      if(rs.status == 200){
+        localStorage.setItem('isUserLoggedIn',"true");
+        this.router.navigate(['/admin']);
+      }else{
+        this.router.navigate(['/']);
+        localStorage.setItem('isUserLoggedIn',"false");
+      }
+  });
   }
 }
 

@@ -57,10 +57,11 @@ public class UserController {
 //        return new ResponseEntity<>(user, HttpStatus.OK);
 //    }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping(value = "/login")
     public ResponseEntity login(@RequestBody LoginDTO loginDTO){
-        Authentication authentication = daoAuthenticationProvider.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(loginDTO.getUsername(), loginDTO.getPassword()));
-        return ResponseEntity.ok(tokenGenerator.createToken(authentication));
+//        Authentication authentication = daoAuthenticationProvider.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(loginDTO.getUsername(), loginDTO.getPassword()));
+        return ResponseEntity.ok("");
     }
 //    @GetMapping("/{username}")
 //    @PreAuthorize("#user.username == #username")
