@@ -106,7 +106,7 @@ export class LoginFormComponent implements OnInit {
     .subscribe(rs =>{
       if(rs.status == 200){
         localStorage.setItem('isUserLoggedIn',"true");
-        this.router.navigate(['/admin']);
+        this.router.navigate(['/']);
       }else{
         this.router.navigate(['/']);
         localStorage.setItem('isUserLoggedIn',"false");
