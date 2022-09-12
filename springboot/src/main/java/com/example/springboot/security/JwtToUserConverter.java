@@ -4,10 +4,15 @@ import com.example.springboot.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -17,6 +22,15 @@ public class JwtToUserConverter implements Converter<Jwt, UsernamePasswordAuthen
     public UsernamePasswordAuthenticationToken convert(Jwt jwt) {
         User user = new User();
         user.setUsername(jwt.getSubject());
-        return new UsernamePasswordAuthenticationToken(user, jwt, Collections.EMPTY_LIST);
+        log.info(jwt.getClaimAsString("roles"));
+        return new UsernamePasswordAuthenticationToken(user, jwt, getAuthorities(jwt.getClaimAsStringList("roles")));
+    }
+
+    private Collection<? extends GrantedAuthority> getAuthorities(List<String> roles) {
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        for (String role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role));
+        }
+        return authorities;
     }
 }

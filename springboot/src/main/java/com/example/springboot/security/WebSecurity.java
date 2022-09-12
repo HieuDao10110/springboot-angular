@@ -77,7 +77,7 @@ public class WebSecurity {
         configuration.setAllowCredentials(true);
 //        configuration.setAllowedHeaders(Arrays.asList("Authorization"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/users/login", configuration);
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 

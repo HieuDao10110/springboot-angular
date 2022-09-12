@@ -55,63 +55,47 @@ export class LoginFormComponent implements OnInit {
   onClickSubmit(data: any) {
     // this.userName = data.userName;
     // this.password = data.password;
-    console.log("Login page: " + typeof data.username);
-    console.log("Login page: " + data.password);
     this.userDetail.username = data.username;
     this.userDetail.password = data.password;
     // if(this.checked){
     //   window.localStorage.setItem('user', this.userName);
     // }
-
-    console.log("Login page: " + this.userDetail);
-    console.log("Login page: " + typeof this.userDetail);
-
-    this.adminService.getPreLogin(this.userDetail)
-    .subscribe( resp => {  
+    this.adminService.getPreLogin(this.userDetail).subscribe( resp => {  
       let at = resp.headers.get('access-token');
-        let rt = resp.headers.get('refresh-token');
-        let urlLogin = resp.headers.get('url-login');
-        this.header.push((at == null)?'':at);
-        this.header.push((rt == null)?'':rt);
+      let rt = resp.headers.get('refresh-token');
+      let urlLogin = resp.headers.get('url-login');
 
-        if(resp.status == 200 && at != null && urlLogin != null){
-          this.showLogin(urlLogin, at);
-        }else{
-          console.log("pre Login fail");
-        }
+      console.log(at);
 
-      // if(resp.status == "success") {
-      //   localStorage.setItem('isUserLoggedIn',"true");
-      //   if(resp.role == "admin"){
-      //     this.router.navigate(['/admin']); 
-      //   }else if(resp.role == "user"){
-      //     this.router.navigate(['/']);
-      //   }else{
-      //     this.router.navigate(['/']);
-      //   }
-      // }
-      // else{
-      //   localStorage.setItem('isUserLoggedIn',"false");
-      // }
-    },
-    (error) => {
-        console.log(error.error);
+      this.header.push((at == null)?'':at);
+      this.header.push((rt == null)?'':rt);
+
+      if(resp.status == 200 && at != null && urlLogin != null){
+        this.showLogin(urlLogin, at);
+      }else{
+        console.log("pre Login fail");
+      }
     });
  }
   toggleShowPass(){
       this.showPass = !this.showPass;
   }
   showLogin(urlLogin:String, at:String){
-    this.adminService.login(urlLogin, at)
-    .subscribe(rs =>{
+    this.adminService.login(urlLogin, at).subscribe(rs =>{
+      
       if(rs.status == 200){
         localStorage.setItem('isUserLoggedIn',"true");
-        this.router.navigate(['/admin']);
+        console.log(rs);
+        if(rs.body == "admin"){
+          this.router.navigate(['/admin']);
+        }else{
+          this.router.navigate(['/']);
+        }
       }else{
-        this.router.navigate(['/']);
         localStorage.setItem('isUserLoggedIn',"false");
+        this.router.navigate(['/']);
       }
-  });
+    });
   }
 }
 

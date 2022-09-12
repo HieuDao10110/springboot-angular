@@ -19,7 +19,8 @@ export class AdminService {
       username: userDetail.username,
       password: userDetail.password
     }
-    return this.http.post<any>(`${this.baseUrl}`+"/auth/login", body, {observe: 'response'});
+    return this.http.post<any>(`${this.baseUrl}`+"/auth/login", body, {observe: 'response'})
+    .pipe(catchError(this.handleError));
   }
 
   login(url: String, accessToken: String): Observable<any>{
@@ -29,8 +30,7 @@ export class AdminService {
     const body = {
       "refreshToken": accessToken
     };
-    return this.http.post(`${this.rootUrl}` + url, body, {observe: 'response', headers})
-    .pipe(catchError(this.handleError));
+    return this.http.post(`${this.rootUrl}` + url, body, {observe: 'response', responseType: 'text', headers: headers})
   }
 
   logout(){

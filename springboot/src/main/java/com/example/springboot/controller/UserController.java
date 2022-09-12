@@ -15,6 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -59,9 +60,21 @@ public class UserController {
 
     @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping(value = "/login")
-    public ResponseEntity login(@RequestBody LoginDTO loginDTO){
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
+    public ResponseEntity login(){
 //        Authentication authentication = daoAuthenticationProvider.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(loginDTO.getUsername(), loginDTO.getPassword()));
-        return ResponseEntity.ok("");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean hasUserRole = authentication.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().equals("ROLE_USER"));
+        boolean hasAdminRole = authentication.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
+        if(hasUserRole){
+            return ResponseEntity.ok("user");
+        }
+        if(hasAdminRole){
+            return ResponseEntity.ok("admin");
+        }
+        return ResponseEntity.ok("unknow");
     }
 //    @GetMapping("/{username}")
 //    @PreAuthorize("#user.username == #username")
