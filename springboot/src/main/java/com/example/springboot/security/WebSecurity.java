@@ -1,5 +1,6 @@
 package com.example.springboot.security;
 
+import com.example.springboot.config.JwtBlackListAuthenticationConfig;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -27,6 +28,7 @@ import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthen
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -47,6 +49,9 @@ public class WebSecurity {
     @Autowired
     UserDetailsManager userDetailsManager;
 
+    @Autowired
+    JwtBlackListAuthenticationConfig jwtBlackListAuthenticationConfig;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -54,6 +59,18 @@ public class WebSecurity {
                         .antMatchers("/api/auth/*").permitAll()
                         .anyRequest().authenticated()
                 )
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .permitAll()
+                )
+//                .logout(logout -> logout
+//                        .logoutUrl("/my/logout")
+//                        .logoutSuccessUrl("http://localhost:4200/")
+//                        .logoutSuccessHandler(logoutSuccessHandler)
+//                        .invalidateHttpSession(true)
+//                        .addLogoutHandler(logoutHandler)
+//                        .deleteCookies(cookieNamesToClear)
+//                )
                 .csrf().disable()
                 .cors(Customizer.withDefaults())
                 .httpBasic().disable()
@@ -64,7 +81,7 @@ public class WebSecurity {
                 .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
                         .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
-                );
+                ).addFilterAfter(jwtBlackListAuthenticationConfig, SwitchUserFilter.class);
         return http.build();
     }
 
@@ -80,6 +97,8 @@ public class WebSecurity {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
+
 
     @Bean
     @Primary

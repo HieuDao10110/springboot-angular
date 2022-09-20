@@ -70,10 +70,13 @@ export class LoginFormComponent implements OnInit {
       this.header.push((at == null)?'':at);
       this.header.push((rt == null)?'':rt);
 
-      if(resp.status == 200 && at != null && urlLogin != null){
+      if(resp.status == 200 && at != null && rt != null && urlLogin != null){
+        localStorage.setItem("access-token", at);
+        localStorage.setItem("refresh-token", rt);
         this.showLogin(urlLogin, at);
       }else{
         console.log("pre Login fail");
+        this.router.navigate(['/login']);
       }
     });
  }

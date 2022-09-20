@@ -19,6 +19,7 @@ import org.springframework.security.oauth2.server.resource.BearerTokenAuthentica
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Collections;
 
@@ -89,5 +90,10 @@ public class AuthController {
         // check if present in db and not revoked, etc
 
         return ResponseEntity.ok(tokenGenerator.createToken(authentication));
+    }
+
+    @GetMapping("/re")
+    public RedirectView re() {
+        return new RedirectView("http://localhost:4200");
     }
 }

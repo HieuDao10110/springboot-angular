@@ -33,7 +33,6 @@ public class TokenGenerator {
         UserDetails user = (UserDetails) authentication.getPrincipal();
         Instant now = Instant.now();
 
-
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
                 .issuer("myApp")
                 .issuedAt(now)

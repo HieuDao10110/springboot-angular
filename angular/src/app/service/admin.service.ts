@@ -28,15 +28,27 @@ export class AdminService {
       'Authorization': 'Bearer ' + accessToken
     };
     const body = {
-      "refreshToken": accessToken
+      "accessToken": accessToken
     };
     return this.http.post(`${this.rootUrl}` + url, body, {observe: 'response', responseType: 'text', headers: headers})
   }
 
-  logout(){
+  logout(): Observable<any>{
+    const accessToken = localStorage.getItem('access-token');
     localStorage.removeItem('isUserLoggedIn');
+    localStorage.removeItem('access-token');
+    localStorage.removeItem('refresh-token');
+    console.log("show token get from localStorage: "+accessToken);
+    const headers = { 
+      'Authorization': 'Bearer ' + accessToken
+    };
+    return this.http.post(`${this.rootUrl}` + "/api/users/logout", "", {observe: 'response', responseType: 'text', headers: headers});
   }
 
+  test(): Observable<any>{
+    localStorage.removeItem('isUserLoggedIn');
+    return this.http.get("http://localhost:8080/api/auth/re");
+  }
   handleError(error: HttpErrorResponse) {
     return throwError(() => new Error(error.error));
 }

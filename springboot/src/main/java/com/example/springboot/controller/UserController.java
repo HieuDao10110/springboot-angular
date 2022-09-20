@@ -1,10 +1,12 @@
 package com.example.springboot.controller;
 
+import com.example.springboot.config.UserRequestScopedBean;
 import com.example.springboot.dto.LoginDTO;
 import com.example.springboot.dto.UserDTO;
 import com.example.springboot.model.User;
 import com.example.springboot.repository.UserRepository;
 import com.example.springboot.security.TokenGenerator;
+import com.example.springboot.service.BlackListingService;
 import com.example.springboot.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,11 @@ public class UserController {
     @Autowired
     TokenGenerator tokenGenerator;
 
+    @Autowired
+    private BlackListingService blackListingService;
+
+    @Autowired
+    private UserRequestScopedBean userRequestScopedBean;
     // get all user
 //    @GetMapping(value = "/get")
 //    public Iterable<User> getAllEmployees(){
@@ -82,4 +89,12 @@ public class UserController {
 //        log.info("user auth {}", user);
 //        return ResponseEntity.ok(UserDTO.from(userRepository.findByUsername(username).orElseThrow()));
 //    }
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PostMapping(value = "/logout")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
+    public ResponseEntity logout() {
+        blackListingService.blackListJwt(userRequestScopedBean.getJwt());
+        log.info("put to cache ............ {}", userRequestScopedBean.getJwt());
+        return ResponseEntity.ok("logout success");
+    }
 }
